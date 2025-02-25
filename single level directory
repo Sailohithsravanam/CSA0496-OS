@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+struct File {
+    char name[20];
+};
+struct Directory {
+    struct File files[10];
+    int count;
+};
+void createFile(struct Directory *dir, char name[]) {
+    strcpy(dir->files[dir->count].name, name);
+    dir->count++;
+    printf("File '%s' created.\n", name);
+}
+void listFiles(struct Directory dir) {
+    printf("Files: ");
+    for (int i = 0; i < dir.count; i++)
+        printf("%s ", dir.files[i].name);
+    printf("\n");
+}
+int main() {
+    struct Directory dir = {0};
+    createFile(&dir, "file1.txt");
+    createFile(&dir, "file2.txt");
+    listFiles(dir);
+    return 0;
+}
