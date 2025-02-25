@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+void scanDiskScheduling(int requests[], int n, int head, int diskSize, char direction) {
+    int left[50], right[50], l = 0, r = 0;
+    int totalSeek = 0, current = head;
+    if (direction == 'l')
+        left[l++] = 0;
+    else
+        right[r++] = diskSize - 1;
+    for (int i = 0; i < n; i++) {
+        if (requests[i] < head)
+            left[l++] = requests[i];
+        else
+            right[r++] = requests[i];
+    }
+    for (int i = 0; i < l - 1; i++)
+        for (int j = i + 1; j < l; j++)
+            if (left[i] > left[j])
+                left[i] ^= left[j] ^= left[i] ^= left[j];
+    for (int i = 0; i < r - 1; i++)
+        for (int j = i + 1; j < r; j++)
+            if (right[i] > right[j])
+                right[i] ^= right[j] ^= right[i] ^= right[j];
+    printf("Seek Sequence: ");
+    if (direction == 'r') {
+        for (int i = 0; i < r; i++) {
+            printf("%d ", right[i]);
+            totalSeek += abs(right[i] - current);
+            current = right[i];
+        }
+        for (int i = l - 1; i >= 0; i--) {
+            printf("%d ", left[i]);
+            totalSeek += abs(left[i] - current);
+            current = left[i];
+        }
+    } else {
+        for (int i = l - 1; i >= 0; i--) {
+            printf("%d ", left[i]);
+            totalSeek += abs(left[i] - current);
+            current = left[i];
+        }
+        for (int i = 0; i < r; i++) {
+            printf("%d ", right[i]);
+            totalSeek += abs(right[i] - current);
+            current = right[i];
+        }
+    }
+    printf("\nTotal Seek Time: %d\n", totalSeek);
+}
+int main() {
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int n = sizeof(requests) / sizeof(requests[0]);
+    int head = 53, diskSize = 200;
+    char direction = 'r';
+    scanDiskScheduling(requests, n, head, diskSize, direction);
+    return 0;
+}
