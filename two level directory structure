@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <string.h>
+struct File {
+    char name[20];
+};
+struct User {
+    char name[20];
+    struct File files[10];
+    int fileCount;
+};
+struct User users[5];
+int userCount = 0;
+void createUser(char name[]) {
+    strcpy(users[userCount].name, name);
+    users[userCount].fileCount = 0;
+    userCount++;
+    printf("User '%s' created.\n", name);
+}
+void createFile(char user[], char filename[]) {
+    for (int i = 0; i < userCount; i++) {
+        if (strcmp(users[i].name, user) == 0) {
+            strcpy(users[i].files[users[i].fileCount++].name, filename);
+            printf("File '%s' created under '%s'.\n", filename, user);
+            return;
+        }
+    }
+    printf("User not found.\n");
+}
+int main() {
+    createUser("Alice");
+    createFile("Alice", "doc1.txt");
+    return 0;
+}
